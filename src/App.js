@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Counter from './Counter';
 
 export default class App extends Component {
 state = {
@@ -12,29 +13,30 @@ onCount = () => {
   }
 
 shouldComponentUpdate(nextPorps, nextState) {
-    return (nextState.count%10!==0);
+    return (nextState.count%10!==0 || nextState.count===0);
+}
+componentDidUpdate(prevProps, prevState) {
+  // console.log('prevState', prevState);
+  this.resetCount(prevState);
 }
 
-componentDidUpdate () {
-  this.resetCount();
-}
+resetCount = prevState => { 
+clearTimeout(this.timerId);
+    this.timerId=setTimeout(prevState => {
+    console.log(prevState); 
+    this.setState({ count: 0 });
+  }, 5000);
+};
 
-resetCount = () => {
-   setTimeout(()=>{
-      this.setState (
-        {count: 0}
-      )
-   }, 5000);
-   
- }
+
 
   render () {
-    let {count}=this.state;
+    // let {count}=this.state;
     
     return (    
       <div>    
         <button onClick = {this.onCount} > Click me! </button>
-        <h3>Количество кликов {count} шт. </h3>
+        < Counter  count ={this.state.count}/>
       </div>
     );
   }
